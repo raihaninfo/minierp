@@ -2,89 +2,62 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
-	"log"
-	"strings"
-
-	_ "github.com/mattn/go-sqlite3"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	_ "github.com/mattn/go-sqlite3"
 )
 
-var db *sql.DB
-var err error
+var (
+	myApp    fyne.App    = app.New()
+	myWindow fyne.Window = myApp.NewWindow("Mini ERP v0.0.1")
+	db       *sql.DB
+	err      error
+)
 
+// Database connection.
 func init() {
-
-	// Connect to database
-	db, err = sql.Open("sqlite3", "/home/mostain/go/src/master_academy/minierp.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	db.SetMaxOpenConns(1)
-	log.Println("db connection successful")
-
+	dbcon()
 }
 
 func main() {
+	myWindow.Resize(fyne.NewSize(800, 600))
+	
 
-	// addClient("RAIHAN", "01672710028", "raihan@gmail.com", "House# 01, Road# 02")
-	// os.Exit(1)
+	emailEntry := widget.NewEntry()
+	emailEntry.PlaceHolder = "Enter your email"
 
-	defer db.Close()
-	myApp := app.New()
-	myWindow := myApp.NewWindow("My Form")
+	passwordEntry := widget.NewPasswordEntry()
+	passwordEntry.PlaceHolder = "Enter your password"
 
-	myWindow.Resize(fyne.NewSize(600, 400))
+	email := widget.NewFormItem("Email", emailEntry)
+	password := widget.NewFormItem("Password", passwordEntry)
 
-	name := widget.NewEntry()
-	name.PlaceHolder = "Enter customer name"
+	loginForm := widget.NewForm(email, password)
 
-	mobile := widget.NewEntry()
-	mobile.PlaceHolder = "Enter customer number"
+	loginForm.SubmitText = "Login"
 
-	email := widget.NewEntry()
-	email.PlaceHolder = "Enter customer email"
-
-	address := widget.NewMultiLineEntry()
-	address.PlaceHolder = "Type customer address"
-
-	row1 := widget.NewFormItem("Name", name)
-	row2 := widget.NewFormItem("Mobile", mobile)
-	row3 := widget.NewFormItem("Email", email)
-	row4 := widget.NewFormItem("Address", address)
-
-	wform := widget.NewForm(row1, row2, row3, row4)
-	wform.SubmitText = "Save"
-
-	wform.OnSubmit = func() {
-
-		name := strings.ToUpper(name.Text)
-		phone := mobile.Text
-		emailID := strings.ToLower(email.Text)
-		address := address.Text
-
-		//myData := fmt.Sprintf(`%s %v %s %s`, name, phone, emailID, address)
-		id, err := addClient(name, phone, emailID, address)
-		if err != nil {
-			log.Println(err)
-			return
+	loginForm.OnSubmit = func() {
+		// appEmail := "admin@abc.com"
+		// appPass := "12345678"
+		appEmail := ""
+		appPass := ""
+		if emailEntry.Text == appEmail && passwordEntry.Text == appPass {
+			ShowDashbod(myApp)
+		} else {
+			dialog.NewInformation("Invalid Email or password", "Email or Passwor invalid", myWindow).Show()
 		}
-		myData := fmt.Sprintf(`Client added New client ID # %d`, id)
-		dialog.NewInformation("Confirmation", myData, myWindow).Show()
 
 	}
-	wform.OnCancel = func() {}
 
-	//labelName := widget.NewLabel("Name")
-	//inputName := widget.NewEntry()
-	//fContainer := container.NewBorder(widget.NewLabel("My Form"), widget.NewLabel("Footer"), labelName, nil, inputName)
+	loginForm.OnCancel = func() {
+		myWindow.Close()
+	}
 
-	myWindow.SetContent(wform)
+	myWindow.SetContent(
+		loginForm,
+	)
 	myWindow.ShowAndRun()
-
 }

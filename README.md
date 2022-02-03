@@ -1,27 +1,25 @@
-# minierp
-Project based learning, application development from scratch using golang.
+# fyne_erp project
 
+## Login page
 
-* [Project Outline](./project_outline.md)
-* [Requirement specification](./assignment/02_Database_structure/Rezaul.md)
-* [Fyne Environment installation process](./prepare_fyne_environment.md)
+![login](img/1.png)
 
-![Layout concept](./screenshots/layout_concept.png)
+## Dashbord
 
-## How do we compile for different platform?
-> GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -ldflags -H=windowsgui
+![](img/2.png)
 
-![error_build](./screenshots/error_build.png)
-### if it not work then use second method-
-## install this first ( ubuntu user)
-```bash
-sudo apt-get install -y *-w64-x86-*
-```
+## Client Add Form
 
-> then use this command for build for windows
-```bash
-GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ go build -ldflags "-H windowsgui"
-```
+![](img/3.png)
 
-## How to setup FYNE.io environment
-* [Windows](./assignment/Rezaul.md)
+## Total Client Table
+
+![](img/4.png)
+
+## Product Add From
+
+![](img/5.png)
+
+## Light Theme
+
+![](img/6.png)
